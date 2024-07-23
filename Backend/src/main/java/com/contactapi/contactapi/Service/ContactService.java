@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import static com.contactapi.contactapi.constant.constant.PHOTO_DIRECTORY;
+import static com.contactapi.contactapi.constant.Constant.PHOTO_DIRECTORY;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 
@@ -46,7 +46,7 @@ public class ContactService {
     }
 
     public void deleteContact(Contact contact){
-
+        contactRepo.delete(contact);
     }
 
     public String uploadPhoto(String id, MultipartFile file){
@@ -61,7 +61,7 @@ public class ContactService {
     private final Function<String, String> fileExtension = filename -> Optional.of(filename).filter(name -> name.contains("."))
             .map(name -> "." + name.substring(filename.lastIndexOf(".") + 1)).orElse(".png");
 
-//    BiFunction its a method takes String MultipartFile and returns String
+//    BiFunction it's a method takes String MultipartFile and returns String
     private final BiFunction<String, MultipartFile, String> photoFunction = (id, image) -> {
         String filename = id + fileExtension.apply(image.getOriginalFilename());
         try{

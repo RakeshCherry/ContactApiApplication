@@ -31,5 +31,6 @@ public class Contact {
     private String title;
     private String address;
     private String phone;
+    private String status;
     private String photoUrl;
 }
