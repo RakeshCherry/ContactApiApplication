@@ -23,30 +23,30 @@ function App() {
     status: '',
   });
 
-  const getAllContacts = async (page = 0, size=10) => {
-    try{
+  const getAllContacts = async (page = 0, size = 10) => {
+    try {
       setCurrentPage(page);
-      const {data} = await getAllContacts(page, size);
+      const { data } = await getContacts(page, size);
       setData(data);
-      console.log(data);
-    }catch(error){
-      console.log(error);
+      // console.log(data);
+    } catch (error) {
+      // console.log(error);
       toastError(error.message);
     }
   };
 
-  const onChange = (event) =>{
-    setValues({...values, [event.target.name]: event.target.value});
+  const onChange = (event) => {
+    setValues({ ...values, [event.target.name]: event.target.value });
   };
 
-  const handleNewContact = async (event) =>{
+  const handleNewContact = async (event) => {
     event.preventDefault();
-    try{
-      const {data} = await saveContact(values);
-      const formData = new formData();
+    try {
+      const { data } = await saveContact(values);
+      const formData = new FormData();
       formData.append('file', file, file.name);
       formData.append('id', data.id);
-      const {data: photoUrl} = await updatePhoto(formData);
+      const { data: photoUrl } = await udpatePhoto(formData);
       toggleModal(false);
       setFile(undefined);
       fileRef.current.value = null;
@@ -59,57 +59,55 @@ function App() {
         status: '',
       })
       getAllContacts();
-    }catch(error){
-      console.log(error);
+    } catch (error) {
       toastError(error.message);
     }
   };
 
   const updateContact = async (contact) => {
-    try{
-      const {data} = await saveContact(contact);
-      console.log(data);
-    }catch(error){
-      console.log(error);
+    try {
+      const { data } = await saveContact(contact);
+    } catch (error) {
+      // console.log(error);
       toastError(error.message);
     }
   };
 
   const updateImage = async (formData) => {
-    try{
-      const {data: photoUrl} = await updatePhoto(formData);
-    }catch (error){
-      console.log(error);
+    try {
+      const { data: photoUrl } = await udpatePhoto(formData);
+    } catch (error) {
+      // console.log(error);
       toastError(error.message);
     }
   };
 
-  const toggleModal = show ? modalRef.current.showModal() : modalRef.current.close();
+  const toggleModal = show => show ? modalRef.current.showModal() : modalRef.current.close();
 
-  useEffect(() =>{
+  useEffect(() => {
     getAllContacts();
   }, []);
 
   return (
     <>
-    <Header toggleModal={toggleModal} nbOfContacts={data.totalElements}/>
-    <main className='main'>
-      <div className='container'>
-        <Routes>
-          <Route path='/' element={<Navigate to={'/contacts'}/>}/>
-          <Route path='/contacts' element={<ContactList data={data} currentPage={currentPage} getAllContacts={getAllContacts}/>}/>
-          <Route path='/contacts/:id' element={<ContactDetail updateContact={updateContact} updateImage={updateImage}/>}/>
-        </Routes>
-      </div>
-    </main>
+      <Header toggleModal={toggleModal} nbOfContacts={data.totalElements} />
+      <main className='main'>
+        <div className='container'>
+          <Routes>
+            <Route path='/' element={<Navigate to={'/contacts'} />} />
+            <Route path="/contacts" element={<ContactList data={data} currentPage={currentPage} getAllContacts={getAllContacts} />} />
+            <Route path="/contacts/:id" element={<ContactDetail updateContact={updateContact} updateImage={updateImage} />} />
+          </Routes>
+        </div>
+      </main>
 
-    {/* Modal */}
-    <dialog ref={modalRef} className='modal' id='modal'>
-      <div className='modal_header'>
-        <h3>New Contact</h3>
-        <i onClick={() => toggleModal(false)} className='bi bi-x-lg'></i>
-      </div>
-      <div className="divider"></div>
+      {/* Modal */}
+      <dialog ref={modalRef} className="modal" id="modal">
+        <div className="modal__header">
+          <h3>New Contact</h3>
+          <i onClick={() => toggleModal(false)} className="bi bi-x-lg"></i>
+        </div>
+        <div className="divider"></div>
         <div className="modal__body">
           <form onSubmit={handleNewContact}>
             <div className="user-details">
@@ -148,8 +146,8 @@ function App() {
             </div>
           </form>
         </div>
-    </dialog>
-    <ToastContainer />
+      </dialog>
+      <ToastContainer />
     </>
   );
 }
